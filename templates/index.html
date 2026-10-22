@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phishing Email Detector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121824;
+            color: #ffffff;
+            margin: 40px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        h2 { color: #38bdf8; text-align: center; margin-top: 0; }
+        textarea {
+            width: 100%;
+            height: 220px;
+            background: #0f172a;
+            color: #38bdf8;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover { background-color: #0369a1; }
+        .result-box {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 6px;
+            background: #0f172a;
+            border-left: 6px solid #ccc;
+        }
+        .red { border-left-color: #ef4444; }
+        .orange { border-left-color: #f59e0b; }
+        .green { border-left-color: #10b981; }
+        .badge {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .red-text { color: #ef4444; }
+        .orange-text { color: #f59e0b; }
+        .green-text { color: #10b981; }
+        ul { margin-top: 8px; }
+        li { margin-bottom: 5px; color: #cbd5e1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Phishing Email Detector Tool</h2>
+        <form method="POST">
+            <label for="email_text"><b>Apna Email Yaha Paste Kare:</b></label><br><br>
+            <textarea name="email_text" placeholder="Email ka text ya pura source code yaha paste kare...">{{ pasted_text }}</textarea>
+            <button type="submit">Check Email (Analyze)</button>
+        </form>
+
+        {% if result %}
+        <div class="result-box {{ result.color }}">
+            <div class="badge {{ result.color }}-text">
+                Nateeja: {{ result.verdict }} (Risk Score: {{ result.score }}/100)
+            </div>
+
+            <h4>Email me mili khamiyan (Findings):</h4>
+            {% if result.findings %}
+                <ul>
+                    {% for item in result.findings %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: #10b981;">Koi sandigdh cheez ya urgent keywords nahi mile.</p>
+            {% endif %}
+
+            {% if result.urls %}
+                <h4>Email me mile Links (Defanged):</h4>
+                <ul>
+                    {% for link in result.urls %}
+                        <li><code>{{ link }}</code></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
